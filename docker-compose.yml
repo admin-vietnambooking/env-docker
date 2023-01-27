@@ -1,0 +1,33 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: '3.1'
+services:
+    mysql:
+        image: 'mysql:5.7'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+        environment:
+            - MYSQL_ROOT_PASSWORD=passroot1
+            - MYSQL_DATABASE=wpdb1
+            - MYSQL_USER=user1
+            - MYSQL_PASSWORD=pass1
+        ports:
+            - '64002:3306'
+
+    webserver:
+        image: 'nginx:alpine'
+        working_dir: /application/public
+        volumes:
+            - '../../src/vps_100/vnbking/vnbking/vietnambooking.com/public_html:/application/public'
+            - './phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+        ports:
+            - '64000:80'
+
+    php-fpm:
+        build: phpdocker/php-fpm
+        working_dir: /application
+        volumes:
+            - '../../src/vps_100/vnbking/vnbking/vietnambooking.com/public_html:/application/public'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini'
